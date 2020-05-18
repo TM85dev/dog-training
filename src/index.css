@@ -256,6 +256,19 @@ nav > div:last-of-type > span:last-of-type div {
   cursor: default;
 }
 
+.site main > div ol {
+  margin: 6px 20px;
+  padding-bottom: 16px;
+  padding-right: 16px;
+  font-size: 18px;
+  text-align: justify;
+  cursor: default;
+}
+
+.site main > div ol li {
+  margin-bottom: 10px;
+}
+
 .site main > div.gallery-bg {
   position: fixed;
   display: -webkit-box;
@@ -467,5 +480,55 @@ footer p {
   height: 156px;
   top: 0;
   opacity: 0;
+}
+
+form {
+  width: calc(90% - 20vw);
+  margin: 0 auto;
+}
+
+form label {
+  display: block;
+  margin: 16px;
+}
+
+form label span {
+  position: absolute;
+  line-height: 40px;
+  margin-left: 10px;
+  margin-top: 20px;
+  cursor: text;
+}
+
+form label input {
+  width: 100%;
+  height: 42px;
+  padding: 0 10px;
+  margin-top: 20px;
+  border-radius: 5px;
+  border: 0 solid black;
+  -webkit-box-shadow: 0 0 4px 1px silver;
+          box-shadow: 0 0 4px 1px silver;
+}
+
+form label textarea {
+  width: 100%;
+  height: 120px;
+  padding: 12px 10px;
+  margin-top: 20px;
+  border-radius: 5px;
+  border: 0 solid black;
+  -webkit-box-shadow: 0 0 4px 1px silver;
+          box-shadow: 0 0 4px 1px silver;
+}
+
+form button {
+  float: right;
+  margin: 16px 0 30px;
+  padding: 8px 40px;
+  background-color: white;
+  border: 2px solid red;
+  color: red;
+  cursor: pointer;
 }
 /*# sourceMappingURL=index.css.map */
