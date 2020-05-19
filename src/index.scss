@@ -405,6 +405,10 @@ form {
       border: 0 solid black;
       box-shadow: 0 0 4px 1px silver;
     }
+    div {
+      margin-top: 4px;
+      color: red;
+    }
     display: block;
     margin: 16px;
   }
@@ -416,5 +420,6 @@ form {
     border: 2px solid red;
     color: red;
     cursor: pointer;
+    outline: none;
   }
 }

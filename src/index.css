@@ -522,6 +522,11 @@ form label textarea {
           box-shadow: 0 0 4px 1px silver;
 }
 
+form label div {
+  margin-top: 4px;
+  color: red;
+}
+
 form button {
   float: right;
   margin: 16px 0 30px;
@@ -530,5 +535,6 @@ form button {
   border: 2px solid red;
   color: red;
   cursor: pointer;
+  outline: none;
 }
 /*# sourceMappingURL=index.css.map */

@@ -1,84 +1,74 @@
-import React, { useEffect } from 'react'
-import  { useSpring, animated, config } from 'react-spring'
+import React, { useEffect, useState, useRef } from 'react'
+import  { useSpring, animated } from 'react-spring'
+
+import NameInput from '../inputs/name'
+import EmailInput from '../inputs/email'
+import MessageInput from '../inputs/message'
 
 function Kontakt() {
-// variable
+// variables
     const [show, setShow] = useSpring(() => ({
-        opacity: 0, transform: "translateY(50px)"
-    }))
+        opacity: 0, transform: "translateY(50px)"}))
     const [button, setButton] = useSpring(() => ({
-        color: "red", backgroundColor: "white"
+        color: "red", backgroundColor: "white"}))
+    // input errors
+    const [nameErr, setNameErr] = useState(" ")
+    const [emailErr, setEmailErr] = useState(" ")
+    const [messageErr, setMessageErr] = useState(" ")
+    const [nameErrAnim, setNameErrAnim] = useSpring(() => ({
+        transform: "translateX(-20px)", opacity: 0
     }))
-    const [focusName, setFocusName] = useSpring(() => ({
-        transform: "translateY(0px)", color: "gray",
-        config: config.wobbly
+    const [emailErrAnim, setEmailErrAnim] = useSpring(() => ({
+        transform: "translateX(-20px)", opacity: 0
     }))
-    const [focusEmail, setFocusEmail] = useSpring(() => ({
-        transform: "translateY(0px)", color: "gray",
-        config: config.wobbly
+    const [messageErrAnim, setMessageErrAnim] = useSpring(() => ({
+        transform: "translateX(-20px)", opacity: 0
     }))
-    const [focusMessage, setFocusMessage] = useSpring(() => ({
-        transform: "translateY(0px)", color: "gray",
-        config: config.wobbly
-    }))
-
-// functions
+    //for button
     const buttonOverHandler = () => {
         setButton(() => ({
             color: "white", backgroundColor: "red"
-        }))
-    }
+        }))}
     const buttonUnhoverHandler = () => {
         setButton(() => ({
             color: "red", backgroundColor: "white"
         }))
     }
 
-    // for imię input
-    const focusNameHandler = () => {
-        setFocusName(() => ({
-            transform: "translateY(-36px)", 
-            color: "black"
-        }))
-    }
-    const blurNameHandler = (e) => {
-        setFocusName(() => ({
-            transform: e.target.value.length > 0 ? "translateY(-36px)" : "translateY(0px)", 
-            color: e.target.value.length > 0 ? "black" : "gray"
-        }))
-    }
-
-    // for email input
-    const focusEmailHandler = () => {
-        setFocusEmail(() => ({
-            transform: "translateY(-36px)", 
-            color: "black"
-        }))
-    }
-    const blurEmailHandler = (e) => {
-        setFocusEmail(() => ({
-            transform: e.target.value.length > 0 ? "translateY(-36px)" : "translateY(0px)", 
-            color: e.target.value.length > 0 ? "black" : "gray"
-        }))
-    }
-
-    // for message input
-    const focusMessageHandler = () => {
-        setFocusMessage(() => ({
-            transform: "translateY(-36px)", 
-            color: "black"
-        }))
-    }
-    const blurMessageHandler = (e) => {
-        setFocusMessage(() => ({
-            transform: e.target.value.length > 0 ? "translateY(-36px)" : "translateY(0px)", 
-            color: e.target.value.length > 0 ? "black" : "gray"
-        }))
-    }
-
     // submit handler
+    const nameRef = useRef(null)
+    const emailRef = useRef(null)
+    const messageRef = useRef(null)
     const submitHandler = (e) => {
         e.preventDefault()
+        nameRef.current = e.target.name.value
+        emailRef.current = e.target.email.value
+        messageRef.current = e.target.message.value
+    // name validation
+        if(nameRef.current.length < 3) {
+            setNameErr('*Pole "Imię" musi posiadać więcej niż 3 znaki.')
+            setNameErrAnim(() => ({transform: "translateX(0px)", opacity: 1}))
+        } else {
+            setNameErr(" ")
+            setNameErrAnim(() => ({transform: "translateX(-20px)", opacity: 0}))
+        }
+    // email validation
+        let emailValid = emailRef.current.match(/^([\w.%+-]+)@([\w-]+\.)+([\w]{2,})$/i)
+        if(emailValid) {
+            setEmailErr(" ")
+            setEmailErrAnim(() => ({transform: "translateX(-20px)", opacity: 0}))
+        } else {
+            setEmailErr('*Proszę podać prawidłowy email.')
+            setEmailErrAnim(() => ({transform: "translateX(0px)", opacity: 1}))
+        }
+    //message validation
+        if(emailRef.current.length < 8) {
+            setMessageErr('*Pole "Wiadomość" musi zawierać więcej niż 8 znaków.')
+            setMessageErrAnim(() => ({transform: "translateX(0px)", opacity: 1}))
+        } else {
+            setMessageErr(" ")
+            setMessageErrAnim(() => ({transform: "translateX(-20px)", opacity: 0}))
+        }
     }
 
     useEffect(() => {
@@ -91,29 +81,9 @@ function Kontakt() {
             <animated.div style={show}>
                 <h1>KONTAKT</h1>
                 <form onSubmit={submitHandler} >
-                    <label>
-                        <animated.span style={focusName}>Imię</animated.span>
-                        <input 
-                            onFocus={focusNameHandler}
-                            onBlur={blurNameHandler}
-                            type="text"
-                        />
-                    </label>
-                    <label>
-                        <animated.span style={focusEmail}>Email</animated.span>
-                        <input
-                            onFocus={focusEmailHandler}
-                            onBlur={blurEmailHandler}
-                            type="email" 
-                        />
-                    </label>
-                    <label>
-                        <animated.span style={focusMessage}>Wiadomość</animated.span>
-                        <textarea
-                            onFocus={focusMessageHandler}
-                            onBlur={blurMessageHandler}
-                        />
-                    </label>
+                    <NameInput nameErr={nameErr} errAnim={nameErrAnim} />
+                    <EmailInput emailErr={emailErr} errAnim={emailErrAnim} />
+                    <MessageInput messageErr={messageErr} errAnim={messageErrAnim} />
                     <animated.button 
                         style={button}
                         onMouseOver={buttonOverHandler} 
