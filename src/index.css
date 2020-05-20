@@ -527,6 +527,19 @@ form label div {
   color: red;
 }
 
+form .validation-info {
+  position: absolute;
+  color: #009c00;
+  margin: 20px 0 0 20px;
+  max-width: 30%;
+}
+
+@media screen and (max-width: 613px) {
+  form .validation-info {
+    margin-top: 10px;
+  }
+}
+
 form button {
   float: right;
   margin: 16px 0 30px;

@@ -412,6 +412,15 @@ form {
     display: block;
     margin: 16px;
   }
+  .validation-info {
+    position: absolute;
+    color: rgb(0, 156, 0);
+    margin: 20px 0 0 20px;
+    max-width: 30%;
+    @media screen and (max-width:613px) {
+      margin-top: 10px;
+    }
+  }
   button {
     float: right;
     margin: 16px 0 30px;
