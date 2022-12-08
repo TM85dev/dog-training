@@ -1,22 +1,19 @@
 import React, { useEffect, useState } from 'react'
 import { useSpring, useSprings, animated } from 'react-spring'
+import { Link } from 'react-router-dom'
 import OfertaMenu from '../OfertaMenu'
 
-function Oferta() {
-    const [list, setList] = useState(
-        [
-            { name: 'psie przedszkole', link: require('../../assets/oferta-0.png'), active: false },
-            { name: 'kurs podstawowy', link: require('../../assets/oferta-1.png'), active: false },
-            { name: 'kurs rozszerzony', link: require('../../assets/oferta-2.png'), active: false },
-            { name: 'kurs zaawansowany', link: require('../../assets/oferta-3.png'), active: false },
-            { name: 'kurs tropienia', link: require('../../assets/oferta-4.png'), active: false },
-            { name: 'kurs obronny', link: require('../../assets/oferta-5.png'), active: false },
-            { name: 'kurs przedwystawowy', link: require('../../assets/oferta-6.png'), active: false },
-            { name: 'egzaminy', link: require('../../assets/oferta-7.png'), active: false },
-            { name: 'co daje szkolenie', link: require('../../assets/oferta-8.png'), active: false },
-        ]
-    )
-    const nameList = ['psie przedszkole', 'kurs podstawowy', 'kurs rozszerzony', 'kurs zaawansowany', 'kurs tropienia', 'kurs obronny', 'kurs przedwystawowy', 'egzaminy', 'co daje szkolenie']
+function Oferta({list, setList}) {
+    
+    const nameList = [
+        'psie przedszkole', 'kurs podstawowy', 'kurs rozszerzony', 'kurs zaawansowany', 
+        'kurs tropienia', 'kurs obronny', 'kurs przedwystawowy', 'egzaminy', 'co daje szkolenie'
+    ]
+    const links = [
+        '/oferta/psie-przedszkole','/oferta/kurs-podstawowy', '/oferta/kurs-rozszerzony', 
+        '/oferta/kurs-zaawansowany', '/oferta/kurs-tropienia', '/oferta/kurs-obronny', 
+        '/oferta/kurs-przedwystawowy', '/oferta/egzaminy', '/oferta/co-daje-szkolenie'
+    ]
 
     const [fadeIn, setFadeIn] = useSpring(() => ({
         opacity: 0,
@@ -25,18 +22,31 @@ function Oferta() {
     const [blurBox, setBlurBox] = useSprings(list.length, index => ({
         filter: "blur(0px)"
     }))
-    const [displayText, setDisplayText] = useSprings(list.length, index => ({
+    const [displayBlockText, setDisplayBlockText] = useSprings(list.length, index => ({
         height: "40px", bottom: "44px", color: "white", opacity: 1
+    }))
+    const [displayText, setDisplayText] = useSprings(list.length, index => ({
+        opacity: 1
+    }))
+    const [showBox] = useSprings(list.length, index => ({
+        from: {opacity: 0},
+        to: {opacity: 1},
+        delay: 1000 + (index * 200)
     }))
     // on hover box
     const hoveredImage = (i) => {
         setBlurBox(index => ({
             filter: index === i ? "blur(4px)" : "blur(0px)"
         }))
-        setDisplayText(index => ({
+        setDisplayBlockText(index => ({
             height: index === i ? "0px" : "40px",
             bottom: index === i ? "0px" : "44px",
             opacity: index === i ? 0 : 1
+        }))
+        setDisplayText(index => ({
+            from: {opacity: index===i ? 0 : 1},
+            opacity: index === i ? 0 : 1,
+            config: {duration: 400}
         }))
         setTimeout(() => {
             let newList = []
@@ -49,10 +59,13 @@ function Oferta() {
             setList(() => {
                 return newList
             })
-            setDisplayText(index => ({
+            setDisplayBlockText(index => ({
                 height: "40px",
                 bottom: "44px",
                 color: index === i ? "#f0ece7" : "white",
+                opacity: 1
+            }))
+            setDisplayText(index => ({
                 opacity: 1
             }))
         }, 400)
@@ -62,10 +75,13 @@ function Oferta() {
         setBlurBox(index => ({
             filter: "blur(0px)"
         }))
-        setDisplayText(index => ({
+        setDisplayBlockText(index => ({
             height: index === i ? "0px" : "40px",
             bottom: index === i ? "0px" : "44px",
             color: "white",
+            opacity: index === i ? 0 : 1
+        }))
+        setDisplayText(index => ({
             opacity: index === i ? 0 : 1
         }))
         setTimeout(() => {
@@ -79,11 +95,16 @@ function Oferta() {
             setList(() => {
                 return newList
             })
-            setDisplayText(index => ({
+            setDisplayBlockText(index => ({
                 height: "40px",
                 bottom: "44px",
                 opacity: 1
             }))
+            setTimeout(() => {
+                setDisplayText(index => ({
+                    opacity: 1
+                }))
+            }, 200)
         }, 400)
     }
     useEffect(() => {
@@ -95,19 +116,22 @@ function Oferta() {
     })
     const row = list.map((item, index) => {
         return (
-            <div className="oferta-box" key={index}>
+            <animated.div style={showBox[index]} className="oferta-box" key={index}>
                 <animated.img
                     style={blurBox[index]}
                     src={item.link}
                 />
-                <animated.div style={displayText[index]}>
-                    <span>{item.name}</span>
+                <animated.div style={displayBlockText[index]}>
+                    <animated.span style={displayText[index]}>{item.name}</animated.span>
                 </animated.div>
-                <div id="box-cover"
-                    onMouseOver={() => hoveredImage(index)}
-                    onMouseLeave={() => unhoverImage(index)}
-                ></div>
-            </div>
+                <Link to={links[index]}>
+                    <div id="box-cover"
+                        onMouseOver={() => hoveredImage(index)}
+                        onMouseLeave={() => unhoverImage(index)}
+                        
+                    ></div>
+                </Link>
+            </animated.div>
         )
     })
 
